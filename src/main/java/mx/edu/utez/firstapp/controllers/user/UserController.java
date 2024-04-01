@@ -27,7 +27,6 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse> changeStatus(@PathVariable Long id, @Valid @RequestBody StatusDto dto) {
-
         return service.changeStatus(id, dto.toEntity());
     }
 }

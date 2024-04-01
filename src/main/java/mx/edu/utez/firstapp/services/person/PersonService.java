@@ -9,6 +9,7 @@ import mx.edu.utez.firstapp.models.user.User;
 import mx.edu.utez.firstapp.models.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,14 @@ public class PersonService {
     private final PersonRepository repository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PasswordEncoder encoder;
 
     public PersonService(PersonRepository repository, UserRepository userRepository,
-                         RoleRepository roleRepository) {
+                         RoleRepository roleRepository, PasswordEncoder encoder) {
         this.repository = repository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.encoder = encoder;
     }
 
     @Transactional(readOnly = true)
@@ -69,6 +72,8 @@ public class PersonService {
                                 HttpStatus.BAD_REQUEST, true, "RecordAlreadyExist"
                         ), HttpStatus.BAD_REQUEST);
             person.getUser().setPerson(person);
+            String passX = person.getUser().getPassword();
+            person.getUser().setPassword(encoder.encode(passX));
             Set<Role> roles = person.getUser().getRoles();
             person.getUser().setRoles(null);
             person = repository.saveAndFlush(person);
@@ -90,6 +95,8 @@ public class PersonService {
     public ResponseEntity<ApiResponse> update(Person person) {
         if (person.getUser() != null) {
             person.getUser().setPerson(person);
+            String passX = person.getUser().getPassword();
+            person.getUser().setPassword(encoder.encode(passX));
             Set<Role> roles = person.getUser().getRoles();
             person.getUser().setRoles(null);
             person = repository.saveAndFlush(person);
