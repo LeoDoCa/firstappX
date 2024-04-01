@@ -73,6 +73,7 @@ public class PersonService {
                         ), HttpStatus.BAD_REQUEST);
             person.getUser().setPerson(person);
             String passX = person.getUser().getPassword();
+            System.out.println(passX);
             person.getUser().setPassword(encoder.encode(passX));
             Set<Role> roles = person.getUser().getRoles();
             person.getUser().setRoles(null);
@@ -96,6 +97,7 @@ public class PersonService {
         if (person.getUser() != null) {
             person.getUser().setPerson(person);
             String passX = person.getUser().getPassword();
+            System.out.println(passX);
             person.getUser().setPassword(encoder.encode(passX));
             Set<Role> roles = person.getUser().getRoles();
             person.getUser().setRoles(null);
